@@ -1,23 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "desim_functions.h"
+#include "priority_queue.h"
 
-/* these marcos will be used to define the job types
-  in the priorty queue. */
-#define SIM_END 0
-#define SIM_START 1
-#define ARR_CPU 2
-#define FIN_CPU 3
-#define FIN_DISK1 4
-#define FIN_DISK2 5
-
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
 
   Event* pq = new_event(0, SIM_START, 0);
-  push_event(&pq, 1, ARR_CPU, 1);
-  push_event(&pq, 3, ARR_CPU, 2);
-  push_event(&pq, 9, ARR_CPU, 3);
+  push_event(&pq, 1, JOB_ARRIVES, 1);
+  push_event(&pq, 3, JOB_ARRIVES, 2);
+  push_event(&pq, 9, JOB_ARRIVES, 3);
   push_event(&pq, 2, FIN_CPU, 1);
   push_event(&pq, 6, FIN_CPU, 2);
 
