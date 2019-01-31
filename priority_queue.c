@@ -70,7 +70,11 @@ void print_event(Event *n) {
   }
 }
 
-
+Event* simulation_start(void) {
+  Event* pq = new_event(0, JOB_ARRIVES, 1);
+  push_event(&pq, 100, SIM_END, NULL);
+  return pq;
+}
 
 // /* function to print the contents of a linked list
 //    starting from the given node.

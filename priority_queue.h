@@ -28,5 +28,6 @@ void push_event(Event** head, int time, int event_type, int job_number);
 int get_job(Event** head);
 void pop_event(Event** head);
 void print_event(Event *n);
+Event* simulation_start(void);
 
 #endif

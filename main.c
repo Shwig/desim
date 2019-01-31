@@ -5,15 +5,16 @@
 
 int main(int argc, char **argv) {
 
-  Event* pq = new_event(0, SIM_START, 0);
-  push_event(&pq, 1, JOB_ARRIVES, 1);
-  push_event(&pq, 3, JOB_ARRIVES, 2);
-  push_event(&pq, 9, JOB_ARRIVES, 3);
-  push_event(&pq, 2, FIN_CPU, 1);
-  push_event(&pq, 6, FIN_CPU, 2);
-
+  simulation_start();
   print_event(pq);
   printf("\n");
+
+  // Event* pq = new_event(0, SIM_START, 0);
+  // push_event(&pq, 1, JOB_ARRIVES, 1);
+  // push_event(&pq, 3, JOB_ARRIVES, 2);
+  // push_event(&pq, 9, JOB_ARRIVES, 3);
+  // push_event(&pq, 2, FIN_CPU, 1);
+  // push_event(&pq, 6, FIN_CPU, 2);
 
   // srand(1);
   // printf("%d\n", rand_interval(8,9));
