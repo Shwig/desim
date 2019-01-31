@@ -5,7 +5,7 @@
 
 int main(int argc, char **argv) {
 
-  simulation_start();
+  Event* pq = simulation_start();
   print_event(pq);
   printf("\n");
 
