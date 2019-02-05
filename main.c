@@ -3,21 +3,20 @@
 #include <time.h>
 #include "priority_queue.h"
 #include "fifo_queue.h"
+#include "config_reader.h"
 
 int main(int argc, char **argv) {
-  Queue *q = create_queue();
-  en_queue(q, 10);
-  en_queue(q, 20);
-  de_queue(q);
-  de_queue(q);
-  en_queue(q, 30);
-  en_queue(q, 40);
-  en_queue(q, 50);
-  Qnode *n = de_queue(q);
-  if (n != NULL) {
-    printf("Dequeued item is %d", n->data);
-  }
-    return 0;
+
+    int current_time = 0;
+
+    Config *cp = load_config();
+
+    printf( "\nafter reading and setting values : \n" );
+
+    printf( "string : %s value : %d index : %d\n", cp->conf_types[TIME_A], cp->conf_vals[TIME_A], cp->TIME_A );
+    printf( "string : %s value : %d index : %d\n", cp->conf_types[TIME_B], cp->conf_vals[TIME_B], cp->TIME_B );
+
+    printf( "%f : PROB_QUIT\n", cp->PROB_QUIT );
 
   // Event* pq = simulation_start();
   // print_event(pq);
