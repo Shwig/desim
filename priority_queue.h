@@ -16,9 +16,7 @@
 /* Event struct to create a priority queue based on time.
   A smaller time value indicates a higher priority in the queue */
 typedef struct Event {
-  int time;
-  int event_type;
-  int job_number;
+  int time, event_type, job_number;
   struct Event *next;
 } Event;
 
