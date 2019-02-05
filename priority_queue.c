@@ -51,7 +51,7 @@ void push_event(Event** head, int time, int event_type, int job_number) {
 }
 
 /* Check if hte list is empty */
-int isEmpty(Event** head) {
+int is_empty(Event** head) {
   return (*head) == NULL;
 }
 

@@ -13,6 +13,9 @@ typedef struct Queue {
   struct Qnode *front, *rear;
 }Queue;
 
-Qnode* newNode(int data);
+Qnode* new_node(int data);
+Queue *create_queue();
+void en_queue( Queue *q, int data);
+Qnode *de_queue(Queue *q);
 
 #endif
