@@ -7,14 +7,17 @@
 
 int main(int argc, char **argv) {
 
+  const char *conf_types[NUM_PARAMS] = {"TIME_A", "TIME_B", "PARAM_A", "PARAM_B", "OTHER"};
+  TYPES types;
+
     int current_time = 0;
 
     Config *cp = load_config();
 
     printf( "\nafter reading and setting values : \n" );
 
-    printf( "string : %s value : %d index : %d\n", cp->conf_types[TIME_A], cp->conf_vals[TIME_A], cp->TIME_A );
-    printf( "string : %s value : %d index : %d\n", cp->conf_types[TIME_B], cp->conf_vals[TIME_B], cp->TIME_B );
+    printf( "string : %s value : %d index : %d\n", conf_types[TIME_A], cp->conf_vals[TIME_A], TIME_A );
+    printf( "string : %s value : %d index : %d\n", conf_types[TIME_B], cp->conf_vals[TIME_B], TIME_B );
 
     printf( "%f : PROB_QUIT\n", cp->PROB_QUIT );
 
