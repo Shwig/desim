@@ -4,7 +4,7 @@ Config* load_config() {
 
   Config* this_config = (Config*)malloc(sizeof(Config));
 
-  const char *conf_types[NUM_PARAMS] = {
+  const char *config_params[NUM_PARAMS] = {
     "SEED", "INIT_TIME", "FIN_TIME", "ARRIVE_MIN", "ARRIVE_MAX",
     "CPU_MIN", "CPU_MAX", "DISK1_MIN", "DISK1_MAX", "DISK2_MIN", "DISK2_MAX"
   };
@@ -22,12 +22,12 @@ Config* load_config() {
       // for parameter names we are searching for
       sscanf( line, "QUIT_PROB %f\n", &this_config->QUIT_PROB );
       for (int i=0;i<NUM_PARAMS;i++) {
-      strcpy( search_str, conf_types[i] );
+      strcpy( search_str, config_params[i] );
       strcat( search_str, " %d\n" );
       sscanf( line, search_str, &this_config->conf_vals[i] );
     }
   }
-  
+
   // closes config file
   fclose(fp);
 
@@ -36,13 +36,13 @@ Config* load_config() {
 
 void display_config(Config* cp) {
 
-  const char *conf_types[NUM_PARAMS] = {
+  const char *config_params[NUM_PARAMS] = {
     "SEED", "INIT_TIME", "FIN_TIME", "ARRIVE_MIN", "ARRIVE_MAX",
     "CPU_MIN", "CPU_MAX", "DISK1_MIN", "DISK1_MAX", "DISK2_MIN", "DISK2_MAX"
   };
 
   for (int i = 0; i < NUM_PARAMS; i++) {
-    printf( "Type: %-11s  value: %7d  index: %2d\n", conf_types[i], cp->conf_vals[i], i );
+    printf( "Type: %-11s  value: %7d  index: %2d\n", config_params[i], cp->conf_vals[i], i );
   }
   printf( "\n%f: QUIT_PROB\n\n", cp->QUIT_PROB );
 }

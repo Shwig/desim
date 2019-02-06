@@ -8,7 +8,7 @@
 #define LINE_LENGTH 20
 #define NUM_PARAMS 11 //5number of parameters we intend to read (except for floats)
 
-extern const char* conf_types[NUM_PARAMS];
+extern const char* config_params[NUM_PARAMS];
 typedef enum {
   SEED, INIT_TIME, FIN_TIME, ARRIVE_MIN, ARRIVE_MAX,
   CPU_MIN, CPU_MAX, DISK1_MIN, DISK1_MAX, DISK2_MIN, DISK2_MAX
