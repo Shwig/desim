@@ -7,19 +7,19 @@
 
 int main(int argc, char **argv) {
 
-  const char *conf_types[NUM_PARAMS] = {"TIME_A", "TIME_B", "PARAM_A", "PARAM_B", "OTHER"};
-  TYPES types;
+  const char *conf_types[NUM_PARAMS] = {
+    "SEED", "INIT_TIME", "FIN_TIME", "ARRIVE_MIN", "ARRIVE_MAX",
+    "CPU_MIN", "CPU_MAX", "DISK1_MIN", "DISK1_MAX", "DISK2_MIN", "DISK2_MAX"
+  };
 
-    int current_time = 0;
+  // remember to free this later!
+  Config *cp = load_config();
+  display_config(cp);
 
-    Config *cp = load_config();
-
-    printf( "\nafter reading and setting values : \n" );
-
-    printf( "string : %s value : %d index : %d\n", conf_types[TIME_A], cp->conf_vals[TIME_A], TIME_A );
-    printf( "string : %s value : %d index : %d\n", conf_types[TIME_B], cp->conf_vals[TIME_B], TIME_B );
-
-    printf( "%f : PROB_QUIT\n", cp->PROB_QUIT );
+  // printf( "\nafter reading and setting values : \n" );
+  // printf( "string : %s value : %d index : %d\n", conf_types[TIME_A], cp->conf_vals[TIME_A], TIME_A );
+  // printf( "string : %s value : %d index : %d\n", conf_types[TIME_B], cp->conf_vals[TIME_B], TIME_B );
+  // printf( "%f : PROB_QUIT\n", cp->PROB_QUIT );
 
   // Event* pq = simulation_start();
   // print_event(pq);
