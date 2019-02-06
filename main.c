@@ -7,18 +7,31 @@
 
 int main(int argc, char **argv) {
 
-  const char *config_params[NUM_PARAMS] = {
-    "SEED", "INIT_TIME", "FIN_TIME", "ARRIVE_MIN", "ARRIVE_MAX",
-    "CPU_MIN", "CPU_MAX", "DISK1_MIN", "DISK1_MAX", "DISK2_MIN", "DISK2_MAX"
-  };
-
   // remember to free this later!
-  Config *cp = load_config();
-  display_config(cp);
+  Config *config = load_config();
+  display_config(config);
+
+  // seed random
+  srand(config->conf_vals[SEED]);
+
+  // time that the system will be initialized to
+  int simulation_timer = config->conf_vals[INIT_TIME];
+  int job_counter, current_time = 0;
+
+  Event* priority_q = simulation_start();
+
+  //
+  // while (sim_timer < config->conf_vals[FIN_TIME]) {
+  //   sim_timer += rand_interval(config->conf_vals[ARRIVE_MIN], config->conf_vals[ARRIVE_MAX]);
+  //   printf("%d\n", sim_timer);
+  // }
+
 
   // Event* pq = simulation_start();
-  // print_event(pq);
-  // printf("\n");
+  print_event(priority_q);
+  printf("\n");
+
+
 
   // Event* pq = new_event(0, SIM_START, 0);
   // push_event(&pq, 1, JOB_ARRIVES, 1);

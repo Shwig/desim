@@ -1,13 +1,13 @@
 #include "config_reader.h"
 
+const char *config_params[NUM_PARAMS] = {
+  "SEED", "INIT_TIME", "FIN_TIME", "ARRIVE_MIN", "ARRIVE_MAX",
+  "CPU_MIN", "CPU_MAX", "DISK1_MIN", "DISK1_MAX", "DISK2_MIN", "DISK2_MAX"
+};
+
 Config* load_config() {
 
   Config* this_config = (Config*)malloc(sizeof(Config));
-
-  const char *config_params[NUM_PARAMS] = {
-    "SEED", "INIT_TIME", "FIN_TIME", "ARRIVE_MIN", "ARRIVE_MAX",
-    "CPU_MIN", "CPU_MAX", "DISK1_MIN", "DISK1_MAX", "DISK2_MIN", "DISK2_MAX"
-  };
 
   // opens the config file
   FILE * fp;
@@ -36,13 +36,11 @@ Config* load_config() {
 
 void display_config(Config* cp) {
 
-  const char *config_params[NUM_PARAMS] = {
-    "SEED", "INIT_TIME", "FIN_TIME", "ARRIVE_MIN", "ARRIVE_MAX",
-    "CPU_MIN", "CPU_MAX", "DISK1_MIN", "DISK1_MAX", "DISK2_MIN", "DISK2_MAX"
-  };
+  char quit[] = "QUIT_PROB";
 
+  printf("\nConfiguration parameters loaded: \n");
   for (int i = 0; i < NUM_PARAMS; i++) {
-    printf( "Type: %-11s  value: %7d  index: %2d\n", config_params[i], cp->conf_vals[i], i );
+    printf( "Type: %-11s value: %7d index: %2d\n", config_params[i], cp->conf_vals[i], i );
   }
-  printf( "\n%f: QUIT_PROB\n\n", cp->QUIT_PROB );
+  printf( "Type: %-11s value: %7.2f index: n/a\n\n", quit, cp->QUIT_PROB );
 }

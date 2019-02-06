@@ -16,16 +16,18 @@
 /* Event struct to create a priority queue based on time.
   A smaller time value indicates a higher priority in the queue */
 typedef struct Event {
-  int time, event_type, job_number;
+  int time, job_number, event_type;
   struct Event *next;
 } Event;
 
 int rand_interval(unsigned int min, unsigned int max);
-Event* new_event(int time, int event_type, int job_number);
-void push_event(Event** head, int time, int event_type, int job_number);
+Event* new_event(int time, int job_number, int event_type);
+void push_event(Event** head, int time, int job_number, int event_type);
 int get_job(Event** head);
 void pop_event(Event** head);
 void print_event(Event *n);
 Event* simulation_start(void);
+int is_empty(Event** head);
+void free_event_queue(Event* head);
 
 #endif

@@ -9,11 +9,11 @@ int rand_interval(unsigned int min, unsigned int max) {
 
 /* Create a new node in the Event priority queue
   Returns a pointer to the new Event node */
-Event* new_event(int time, int event_type, int job_number) {
+Event* new_event(int time, int job_number, int event_type) {
   Event* temp = (Event*)malloc(sizeof(Event));
   temp->time = time;
-  temp->event_type = event_type;
   temp->job_number = job_number;
+  temp->event_type = event_type;
   temp->next = NULL;
   return temp;
 }
@@ -26,11 +26,11 @@ int get_type(Event** head) {
 /* Add a new event to the priority queue. Events with
   a lower time value have greater priority and are moved towards
   the front of the queue */
-void push_event(Event** head, int time, int event_type, int job_number) {
+void push_event(Event** head, int time, int job_number, int event_type) {
 
   Event* start = (*head);
   /* temp is the new node to be pushed into the queue */
-  Event* temp = new_event(time, event_type, job_number);
+  Event* temp = new_event(time,  job_number, event_type);
 
   /* If the head of the list has time value greater than
     the new node, make the new node the head node */
@@ -50,11 +50,6 @@ void push_event(Event** head, int time, int event_type, int job_number) {
   }
 }
 
-/* Check if hte list is empty */
-int is_empty(Event** head) {
-  return (*head) == NULL;
-}
-
 /* Remove the head element from the event queue by changing the head pointer
   and freeing the memory allocated to the old head pointer*/
 void pop_event(Event** head) {
@@ -64,25 +59,31 @@ void pop_event(Event** head) {
 }
 
 void print_event(Event *n) {
+  printf("The event Queue: \n" );
   while (n != NULL) {
-    printf(" time:%d, type:%d, J#%d \n", n->time, n->event_type, n->job_number);
+    printf(" Event_time: %7d, Job_number#: %7d, Event_type: %2d \n", n->time, n->job_number, n->event_type);
     n = n->next;
   }
 }
 
 Event* simulation_start(void) {
-  Event* pq = new_event(0, JOB_ARRIVES, 1);
-  push_event(&pq, 100, SIM_END, 0);
+  Event* pq = new_event(0, 1, JOB_ARRIVES);
+  push_event(&pq, 100, 0, SIM_END);
   return pq;
 }
 
-// /* function to print the contents of a linked list
-//    starting from the given node.
-//    While the node is not NULL print the data in the node
-//    traverse to the next node in the list. */
-// void print_list(struct Node *n){
-//   while (n != NULL){
-//     printf(" %d ", n->data);
-//     n = n->next;
-//   }
-// }
+/* Check if hte list is empty */
+int is_empty(Event** head) {
+  return (*head) == NULL;
+}
+
+/*  */
+void free_event_queue(Event* head) {
+
+   struct Event* tmp;
+   while (head != NULL) {
+       tmp = head;
+       head = head->next;
+       free(tmp);
+    }
+}
