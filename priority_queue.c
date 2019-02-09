@@ -18,9 +18,16 @@ Event* new_event(int time, int job_number, int event_type) {
   return temp;
 }
 
+// /* Return the even_type of the event with the highest priority */
+// int get_type(Event** head) {
+//   return (*head)->event_type;
+// }
+
 /* Return the even_type of the event with the highest priority */
-int get_type(Event** head) {
-  return (*head)->event_type;
+void peek(Event** head, int* t, int* j, int* e) {
+  *t = (*head)->time;
+  *j = (*head)->job_number;
+  *e = (*head)->event_type;
 }
 
 /* Add a new event to the priority queue. Events with
@@ -58,12 +65,13 @@ void pop_event(Event** head) {
   free(temp);
 }
 
-void print_event(Event *n) {
-  printf("The event Queue: \n" );
+void print_queue(Event *n) {
+  printf("\nThe event Queue: \n" );
   while (n != NULL) {
     printf(" Event_time: %7d, Job_number#: %7d, Event_type: %2d \n", n->time, n->job_number, n->event_type);
     n = n->next;
   }
+  printf("\n");
 }
 
 Event* simulation_start(void) {

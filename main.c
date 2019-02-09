@@ -16,9 +16,33 @@ int main(int argc, char **argv) {
 
   // time that the system will be initialized to
   int simulation_timer = config->conf_vals[INIT_TIME];
-  int job_counter, current_time = 0;
+  int current_time, job_counter, cpu_counter, dsk1_counter, dsk2_counter = 0;
 
+  // allocate space to keep track of priority q data after popping an event
+  int *time, *job, *event;
+  time = (int *)malloc(sizeof(int));
+  job = (int *)malloc(sizeof(int));
+  event = (int *)malloc(sizeof(int));
+
+  //load the queue with the frst two events job arrives and sim finish
   Event* priority_q = simulation_start();
+
+  //pinrt the queue
+  print_queue(priority_q);
+
+  // store the data members in the first Qnode
+  printf("\n This event node will be popped: \n");
+  peek(&priority_q, time, job, event);
+  printf(" Event_time: %7d, Job_number#: %7d, Event_type: %2d \n", *time, *job, *event);
+
+  pop_event(&priority_q);
+
+  printf("\n Data from the popped node: \n");
+  // peek(&priority_q, time, job, event);        <- This was the problem
+  printf(" Event_time: %7d, Job_number#: %7d, Event_type: %2d \n", *time, *job, *event);
+
+  print_queue(priority_q);
+
 
   //
   // while (sim_timer < config->conf_vals[FIN_TIME]) {
@@ -28,8 +52,8 @@ int main(int argc, char **argv) {
 
 
   // Event* pq = simulation_start();
-  print_event(priority_q);
-  printf("\n");
+  // print_event(priority_q);
+  // printf("\n");
 
 
 
@@ -65,5 +89,8 @@ int main(int argc, char **argv) {
   //
   // print_list(head);
 
+  free(time);
+  free(job);
+  free(event);
   return 0;
 }

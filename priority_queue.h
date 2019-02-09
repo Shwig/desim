@@ -23,8 +23,7 @@ typedef struct Event {
 int rand_interval(unsigned int min, unsigned int max);
 Event* new_event(int time, int job_number, int event_type);
 void push_event(Event** head, int time, int job_number, int event_type);
-int get_job(Event** head);
-void pop_event(Event** head);
+void peek(Event** head, int* t, int* j, int* e);
 void print_event(Event *n);
 Event* simulation_start(void);
 int is_empty(Event** head);

@@ -1,6 +1,6 @@
 #include "fifo_queue.h"
 
-/* Function creates a new linked list Qnode */
+/* Function creates a new Qnode */
 Qnode* new_node(int data) {
     struct Qnode *temp = (Qnode*)malloc(sizeof(Qnode));
     temp->data = data;
