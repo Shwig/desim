@@ -52,14 +52,6 @@ void peek(Event **head, int *t, int *j, int *e) {
   *e = (*head)->event_type;
 }
 
-/* Remove the head element from the event queue by changing the head pointer
-  and freeing the memory allocated to the old head pointer*/
-void pop_event(Event **head) {
-  Event *temp = *head;
-  (*head) = (*head)->next;
-  free(temp);
-}
-
 void print_queue(Event *n) {
   printf("\nThe event Queue: \n" );
   while (n != NULL) {
@@ -83,18 +75,17 @@ void job_arrives(Event **pq, int *config, int *sim_timer,
     // deterimine arrival of next job
     next_job_time = (*sim_timer) + rand_interval(config[0], config[1]);
 
-    printf("\nNext Jtime: %d\n", next_job_time );
-    //create a 2nd job arrives event with this new_jtime
+    // report
     printf("\n  ->This event will be added to the priority_q: \n");
     printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
       next_job_time, (job_number + 1), JOB_ARRIVES);
+    //create a 2nd job arrives event with this new_jtime
     push_event(&(*pq), next_job_time, (job_number + 1), JOB_ARRIVES);
 
     // calculate time job one finishes at CPU
     cpu_fintime = (*sim_timer) + rand_interval(config[2], config[3]);
 
-    printf("\nNext CPU fin_time: %d\n", cpu_fintime);
-    //create a 2nd job arrives event with this new_jtime
+    // report
     printf("\n  ->This event will be added to the priority_q: \n");
     printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
       cpu_fintime, job_number, FIN_CPU);
@@ -102,8 +93,8 @@ void job_arrives(Event **pq, int *config, int *sim_timer,
     // job1 becomes CPU finsih event and gets added to the priority queue
     push_event(&(*pq), cpu_fintime, job_number, FIN_CPU);
 
-    printf("\n  Queue before function call returns: \n");
-    print_queue((*pq));
+    // printf("\n  Queue before function call returns: \n");
+    // print_queue((*pq));
 }
 
 /* Check if the list is empty notify stdout
@@ -127,12 +118,17 @@ int cpu_busy(Event *head) {
   return 0;
 }
 
+/* Remove the head element from the event queue by changing the head pointer
+  and freeing the memory allocated to the old head pointer*/
+void pop_event(Event **head) {
+  Event *temp = *head;
+  (*head) = (*head)->next;
+  free(temp);
+}
+
 /*  */
-void free_event_queue(Event *head) {
-  Event *tmp;
-  while (head != NULL) {
-    tmp = head;
-    head = head->next;
-    free(tmp);
+void free_event_queue(Event **head) {
+  while (*head != NULL) {
+    pop_event(&(*head));
   }
 }

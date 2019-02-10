@@ -35,36 +35,45 @@ int main(int argc, char **argv) {
     usine init time and fin time from config.file*/
   Event* priority_q = simulation_start(simulation_timer, end_time);
 
-  printf("\n  Queue after init 0: \n");
-  print_queue(priority_q);
+  // printf("\n Queue after initiialization: \n");
+  // print_queue(priority_q);
 
   /* While the priority queue is not empty and the simulation_timer
     hasnt reached the FIN_TIME from config file*/
   while((!is_empty(&priority_q)) && (simulation_timer < end_time)) {
 
-    //READ EVENT FROM Queue
     // get all the data about the head node;
     peek(&priority_q, event_time, job_number, event_type);
+
+    // set simulation time to time of the head priority event
+    simulation_timer = *event_time;
+
+    printf("\n  Queue Bbefore POP: \n");
+    print_queue(priority_q);
 
     // pop the head node
     pop_event(&priority_q);
 
-    // if current event_type is a job arrival
-    if (*event_type == JOB_ARRIVES ) {
-      // current time of sim becomes time of the popped event
-      simulation_timer = *event_time;
-      printf("\n\nSimulation_timer:%d\n", simulation_timer );
-      job_arrives(&priority_q, arrive_params, &simulation_timer, *event_time, *job_number, *event_type);
-    } else {
-      // current time of sim becomes time of the popped event
-      simulation_timer = *event_time;
-      printf("\n\n!!!This function does not handle event type: %d", *event_type );
+    switch(*event_type) {
+      case JOB_ARRIVES :
+        printf("\n\nSimulation_timer:%d\n", simulation_timer );
+        job_arrives(&priority_q, arrive_params, &simulation_timer, *event_time, *job_number, *event_type);
+      break;
+      case FIN_CPU :
+        printf("\n\n!!!This function does not handle event type: %d\n", *event_type );
+      break;
+      case FIN_DISK1 :
+        printf("\n\n!!!This function does not handle event type: %d\n", *event_type );
+      break;
+      case FIN_DISK2 :
+        printf("\n\n!!!This function does not handle event type: %d\n", *event_type );
       break;
     }
 
   } // end while
   printf("\n  Queue after While loop: \n");
   print_queue(priority_q);
+
 
   // //pinrt the queue
   // print_queue(priority_q);
@@ -128,6 +137,7 @@ int main(int argc, char **argv) {
   //
   // print_list(head);
 
+  free_event_queue(&priority_q);
   free(event_time);
   free(job_number);
   free(event_type);
