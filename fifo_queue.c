@@ -27,7 +27,7 @@ void en_queue(Queue *q, int event_time, int job_number) {
     // because the list was empty length of the list is now 1
     if (q->rear == NULL) {
       q->front = q->rear = temp;
-      q->length = q->length + 1;
+      q->length++;
       return;
     }
 
@@ -35,11 +35,11 @@ void en_queue(Queue *q, int event_time, int job_number) {
     // add one to the length of the queue
     q->rear->next = temp;
     q->rear = temp;
-    q->length = q->length + 1;
+    q->length++;
 }
 
 /* remove data from given queue q */
-Qnode *de_queue(Queue *q) {
+Qnode* de_queue(Queue *q) {
     // If queue is empty, return NULL.
     if (q->front == NULL) {
        return NULL;
@@ -48,10 +48,12 @@ Qnode *de_queue(Queue *q) {
     // Store previous front and move front one node ahead
     Qnode *temp = q->front;
     q->front = q->front->next;
+    q->length--;
 
     // If front becomes NULL, then change rear also to NULL
     if (q->front == NULL) {
        q->rear = NULL;
      }
+
     return temp;
 }

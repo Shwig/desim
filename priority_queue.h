@@ -29,6 +29,7 @@ void pop_event(Event **head);
 void print_queue(Event *n);
 Event* simulation_start(int start, int end);
 void job_arrives(Event **head, int *config, int *sim_timer, int event_time, int job_number, int event_type );
+void finsih_cpu();
 int is_empty(Event **head);
 int cpu_busy(Event *head);
 void free_event_queue(Event **head);

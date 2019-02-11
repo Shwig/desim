@@ -101,6 +101,10 @@ void job_arrives(Event **pq, int *config, int *sim_timer,
     // print_queue((*pq));
 }
 
+void finsih_cpu() {
+
+}
+
 /* Check if the list is empty notify stdout
   return true if head node points to NULL*/
 int is_empty(Event **head) {

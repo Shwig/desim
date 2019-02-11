@@ -34,10 +34,12 @@ int main(int argc, char **argv) {
 
   /* initialize queue with the first two events job arrives and sim finish
     usine init time and fin time from config.file*/
-  Event* priority_q = simulation_start(simulation_timer, end_time);
+  Event *priority_q = simulation_start(simulation_timer, end_time);
 
-  // printf("\n Queue after initiialization: \n");
-  // print_queue(priority_q);
+  // fifo queues for for CPU, disk_1, and disk_2
+  Queue *cpu_q = create_queue();
+  Queue *disk1_q = create_queue();
+  Queue *disk2_q = create_queue();
 
   /* While the priority queue is not empty and the simulation_timer
     hasnt reached the FIN_TIME from config file*/
@@ -61,7 +63,8 @@ int main(int argc, char **argv) {
         job_arrives(&priority_q, arrive_params, &simulation_timer, *event_time, *job_number, *event_type);
       break;
       case FIN_CPU :
-        printf("\n\n!!!This function does not handle event type3: not -> %d\n", *event_type );
+        // printf("\n\n!!!This function does not handle event type3: not -> %d\n", *event_type );
+
       break;
       case FIN_DISK1 :
         printf("\n\n!!!This function does not handle event type4: not -> %d\n", *event_type );

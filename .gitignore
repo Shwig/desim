@@ -3,6 +3,7 @@ config_old.file
 
 # source files
 read_config.c
+fifo_test.c
 
 # Prerequisites
 *.d
