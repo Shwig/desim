@@ -21,6 +21,7 @@ typedef struct Event {
 } Event;
 
 int rand_interval(unsigned int min, unsigned int max);
+float rand_floater();
 Event* new_event(int time, int job_number, int event_type);
 void push_event(Event** head, int time, int job_number, int event_type);
 void peek(Event** head, int *t, int *j, int *e);

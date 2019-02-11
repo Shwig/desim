@@ -5,17 +5,18 @@
 #include <stdlib.h>
 
 typedef struct Qnode {
-  int data;
+  int job_number, event_time;
   struct Qnode *next;
 }Qnode;
 
 typedef struct Queue {
-  struct Qnode *front, *rear;
+  int length;
+  struct Qnode *rear, *front;
 }Queue;
 
-Qnode* new_node(int data);
+Qnode* new_node(int event_time, int job_number);
 Queue *create_queue();
-void en_queue( Queue *q, int data);
+void en_queue( Queue *q, int event_time, int job_number);
 Qnode *de_queue(Queue *q);
 
 #endif

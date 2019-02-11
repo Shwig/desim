@@ -23,7 +23,8 @@ int main(int argc, char **argv) {
   };
 
   // counters and time vars
-  int next_jtime, cpu_fintime, job_counter, cpu_counter, dsk1_counter, dsk2_counter = 0;
+  int cpu_fintime, job_counter, cpu_counter, dsk1_counter, dsk2_counter = 0;
+  float floater = 0;
 
   // allocate space to keep track of priority q data after popping an event
   int *event_time, *job_number, *event_type;
@@ -60,14 +61,17 @@ int main(int argc, char **argv) {
         job_arrives(&priority_q, arrive_params, &simulation_timer, *event_time, *job_number, *event_type);
       break;
       case FIN_CPU :
-        printf("\n\n!!!This function does not handle event type: %d\n", *event_type );
+        printf("\n\n!!!This function does not handle event type3: not -> %d\n", *event_type );
       break;
       case FIN_DISK1 :
-        printf("\n\n!!!This function does not handle event type: %d\n", *event_type );
+        printf("\n\n!!!This function does not handle event type4: not -> %d\n", *event_type );
       break;
       case FIN_DISK2 :
-        printf("\n\n!!!This function does not handle event type: %d\n", *event_type );
+        printf("\n\n!!!This function does not handle event type5: not -> %d\n", *event_type );
       break;
+      default:
+        // check for errors here maybe
+          printf("\n\n!!!Default unknown event_type\n type -> %d\n", *event_type );
     }
 
   } // end while

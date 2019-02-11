@@ -6,6 +6,10 @@ int rand_interval(unsigned int min, unsigned int max) {
   int this_rand = rand()%(max - min + 1) + min;
   return this_rand;
 }
+/* Return a random float value in range [0,1]*/
+float rand_floater() {
+  return ((float)rand()/RAND_MAX);
+}
 
 /* Create a new node in the Event priority queue
   Returns a pointer to the new Event node */
@@ -126,7 +130,7 @@ void pop_event(Event **head) {
   free(temp);
 }
 
-/*  */
+/*  empty the queue by popping all the nodes*/
 void free_event_queue(Event **head) {
   while (*head != NULL) {
     pop_event(&(*head));
