@@ -74,10 +74,8 @@ Event* simulation_start(int start, int end) {
 void job_arrives(Event **pq, int *config, int *sim_timer,
   int event_time, int job_number, int event_type ){
 
-    int next_job_time, cpu_fintime = 0;
-
     // deterimine arrival of next job
-    next_job_time = (*sim_timer) + rand_interval(config[0], config[1]);
+    int next_job_time = (*sim_timer) + rand_interval(config[0], config[1]);
 
     // report
     printf("\n  ->This event will be added to the priority_q: \n");
@@ -86,23 +84,25 @@ void job_arrives(Event **pq, int *config, int *sim_timer,
     //create a 2nd job arrives event with this new_jtime
     push_event(&(*pq), next_job_time, (job_number + 1), JOB_ARRIVES);
 
-    // calculate time job one finishes at CPU
-    cpu_fintime = (*sim_timer) + rand_interval(config[2], config[3]);
-
-    // report
-    printf("\n  ->This event will be added to the priority_q: \n");
-    printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
-      cpu_fintime, job_number, FIN_CPU);
-
-    // job1 becomes CPU finsih event and gets added to the priority queue
-    push_event(&(*pq), cpu_fintime, job_number, FIN_CPU);
-
     // printf("\n  Queue before function call returns: \n");
     // print_queue((*pq));
 }
 
-void finsih_cpu() {
+/* Calculate the time the job will finish at the cpu and add it
+  to the priority q */
+void send_to_cpu(Event **pq, int *config, int *sim_timer,
+  int event_time, int job_number, int event_type ) {
 
+  // calculate time job one finishes at CPU
+  int cpu_fintime = (*sim_timer) + rand_interval(config[0], config[1]);
+
+  // report
+  printf("\n  ->This event will be added to the priority_q: \n");
+  printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
+    cpu_fintime, job_number, FIN_CPU);
+
+  // job1 becomes CPU finsih event and gets added to the priority queue
+  push_event(&(*pq), cpu_fintime, job_number, FIN_CPU);
 }
 
 /* Check if the list is empty notify stdout
@@ -112,18 +112,6 @@ int is_empty(Event **head) {
     printf("\n  **The priority Queue is empty! \n");
   }
   return (*head) == NULL;
-}
-
-/* Return true if priority_q contains an event with of type FIN_CPU */
-int cpu_busy(Event *head) {
-  while (head != NULL) {
-    if (head->event_type == FIN_CPU) {
-      printf("\n   ***CPU is busy right now!!\n" );
-      return 1;
-    }
-    head = head->next;
-  }
-  return 0;
 }
 
 /* Remove the head element from the event queue by changing the head pointer

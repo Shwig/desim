@@ -9,10 +9,12 @@ fifo_test.c
 *.d
 
 # Object files
+a*
 *.o
 *.ko
 *.obj
 *.elf
+
 
 # Linker output
 *.ilk
