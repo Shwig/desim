@@ -71,37 +71,54 @@ Event* simulation_start(int start, int end) {
   return pq;
 }
 
-void job_arrives(Event **pq, int *config, int *sim_timer,
-  int event_time, int job_number, int event_type ){
-
-    // deterimine arrival of next job
-    int next_job_time = (*sim_timer) + rand_interval(config[0], config[1]);
-
-    // report
-    printf("\n  ->This event will be added to the priority_q: \n");
-    printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
-      next_job_time, (job_number + 1), JOB_ARRIVES);
-    //create a 2nd job arrives event with this new_jtime
-    push_event(&(*pq), next_job_time, (job_number + 1), JOB_ARRIVES);
-
-    // printf("\n  Queue before function call returns: \n");
-    // print_queue((*pq));
-}
-
 /* Calculate the time the job will finish at the cpu and add it
   to the priority q */
-void send_to_cpu(Event **pq, int *config, int *sim_timer,
-  int event_time, int job_number, int event_type ) {
-  // calculate time job one finishes at CPU
-  int cpu_fintime = (*sim_timer) + rand_interval(config[0], config[1]);
+void handle_event(Event **pq, int *config, int *sim_timer,
+  int event_time, int job_number, int event_type ){
 
-  // report
-  printf("\n  ->This event will be added to the priority_q: \n");
-  printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
-    cpu_fintime, job_number, FIN_CPU);
+    int next_event_time = 0;
 
-  // job1 becomes CPU finsih event and gets added to the priority queue
-  push_event(&(*pq), cpu_fintime, job_number, FIN_CPU);
+    switch(event_type) {
+
+      case JOB_ARRIVES :
+        // deterimine arrival of next job
+        next_event_time = (*sim_timer) + rand_interval(config[0], config[1]);
+        //create a 2nd job arrives event with this new_jtime
+        push_event(&(*pq), next_event_time, (job_number + 1), event_type);
+      break;
+
+      case FIN_CPU :
+        // calculate time job one finishes at CPU
+        next_event_time = (*sim_timer) + rand_interval(config[0], config[1]);
+        // job becomes CPU finsih event and gets added to the priority queue
+        push_event(&(*pq), next_event_time, job_number, event_type);
+      break;
+
+      case FIN_DISK1 :
+        // calculate time job one finishes at CPU
+        next_event_time = (*sim_timer) + rand_interval(config[0], config[1]);
+        // job becomes CPU finsih event and gets added to the priority queue
+        push_event(&(*pq), next_event_time, job_number, event_type);
+      break;
+
+      case FIN_DISK2 :
+        // calculate time job one finishes at CPU
+        next_event_time = (*sim_timer) + rand_interval(config[0], config[1]);
+        // job becomes CPU finsih event and gets added to the priority queue
+        push_event(&(*pq), next_event_time, job_number, event_type);
+      break;
+    }
+
+    // report what happend
+    if (event_type == JOB_ARRIVES) {
+      printf("\n  ->This event was added to the priority_q: \n");
+      printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
+        next_event_time, (job_number + 1), event_type);
+    } else {
+      printf("\n  ->This event was added to the priority_q: \n");
+      printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
+        next_event_time, job_number, event_type);
+    }
 }
 
 /* Check if the list is empty notify stdout

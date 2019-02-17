@@ -28,8 +28,7 @@ void peek(Event** head, int *t, int *j, int *e);
 void pop_event(Event **head);
 void print_queue(Event *n);
 Event* simulation_start(int start, int end);
-void job_arrives(Event **head, int *config, int *sim_timer, int event_time, int job_number, int event_type );
-void send_to_cpu(Event **head, int *config, int *sim_timer, int event_time, int job_number, int event_type );
+void handle_event(Event **pq, int *config, int *sim_timer, int event_time, int job_number, int event_type );
 int is_empty(Event **head);
 void free_event_queue(Event **head);
 

@@ -25,6 +25,7 @@ int main(int argc, char **argv) {
   int disk1_params[2] = {config->conf_vals[DISK1_MIN],config->conf_vals[DISK1_MAX]};
   int disk2_params[2] = {config->conf_vals[DISK2_MIN],config->conf_vals[DISK2_MAX]};
 
+
   // counters
   int cpu_fintime, job_counter, cpu_counter, dsk1_counter, dsk2_counter = 0;
 
@@ -68,11 +69,13 @@ int main(int argc, char **argv) {
     switch(*event_type) {
       case JOB_ARRIVES :
         printf("\n\n*JOB_ARRIVES* Simulation_timer:%d", simulation_timer );
-        job_arrives(&priority_q, arrive_params, &simulation_timer, *event_time, *job_number, *event_type);
+        // job_arrives(&priority_q, arrive_params, &simulation_timer, *event_time, *job_number, *event_type);
+        handle_event(&priority_q, arrive_params, &simulation_timer, *event_time, *job_number, JOB_ARRIVES);
 
         // if the cpu is NOT busy
         if (!cpu_busy) {
-          send_to_cpu(&priority_q, cpu_params, &simulation_timer, *event_time, *job_number, *event_type);
+          // send_to_cpu(&priority_q, cpu_params, &simulation_timer, *event_time, *job_number, *event_type);
+          handle_event(&priority_q, cpu_params, &simulation_timer, *event_time, *job_number, FIN_CPU);
           en_queue(cpu_q, *event_time, *job_number);
           cpu_busy = 1;
 
@@ -90,8 +93,10 @@ int main(int argc, char **argv) {
         // While the cpu fifo is not empty
         if (cpu_q->front != NULL) {
           get_fifo_head(&cpu_q, &n);
-          printf("\n  CPU is now busy -> event_time:%d job_num:%d event_type:%d ", n->event_time, n->job_number, FIN_CPU );
-          send_to_cpu(&priority_q, cpu_params, &simulation_timer, n->event_time, n->job_number, FIN_CPU);
+          // printf("\n  CPU is now busy -> event_time:%d job_num:%d event_type:%d ", n->event_time, n->job_number, JOB_ARRIVES );
+          // send_to_cpu(&priority_q, cpu_params, &simulation_timer, n->event_time, n->job_number, JOB_ARRIVES);
+          printf("\n  CPU is now PROCESSING -> event_time:%d job_num:%d event_type:%d ", n->event_time, n->job_number, FIN_CPU );
+          handle_event(&priority_q, cpu_params, &simulation_timer, n->event_time, n->job_number, FIN_CPU);
           cpu_busy = 1;
         }
 
@@ -111,7 +116,7 @@ int main(int argc, char **argv) {
         // } else { // else CPU is busy
         //   printf("\n   CPU was busy" );
         //   en_queue(cpu_q, *event_time, *job_number);
-        // 
+        //
         // }
 
       break;
@@ -139,6 +144,7 @@ int main(int argc, char **argv) {
   } // end while
   // printf("\n  Queue after While loop: \n");
   print_queue(priority_q);
+  print_fifo(cpu_q);
 
 
   free_event_queue(&priority_q);
