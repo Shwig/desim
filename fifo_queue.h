@@ -20,5 +20,6 @@ Queue* create_queue();
 void en_queue( Queue *q, int event_time, int job_number);
 Qnode* de_queue(Queue *q);
 void print_fifo(Queue *q);
+void get_fifo_head(Queue **head, Qnode **node);
 
 #endif

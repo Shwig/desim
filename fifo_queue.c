@@ -81,3 +81,9 @@ void print_fifo(Queue *q) {
   }
   q->front = temp;
 }
+
+/* copy the data elements of the head node */
+void get_fifo_head(Queue **head, Qnode **node) {
+  *node = (*head)->front;
+
+}

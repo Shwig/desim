@@ -92,7 +92,6 @@ void job_arrives(Event **pq, int *config, int *sim_timer,
   to the priority q */
 void send_to_cpu(Event **pq, int *config, int *sim_timer,
   int event_time, int job_number, int event_type ) {
-
   // calculate time job one finishes at CPU
   int cpu_fintime = (*sim_timer) + rand_interval(config[0], config[1]);
 
