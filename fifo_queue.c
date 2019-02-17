@@ -74,7 +74,7 @@ Qnode* de_queue(Queue *q) {
 
 void print_fifo(Queue *q) {
   Qnode *temp = q->front;
-  printf("\nThe fifo Queue:\n");
+  printf("fifo Queue:\n");
   while (q->front != NULL) {
     printf(" Event_time: %7d, Job_number#: %7d \n", q->front->event_time, q->front->job_number);
     q->front = q->front->next;

@@ -29,10 +29,6 @@ int main(int argc, char **argv) {
   // counters
   int cpu_fintime, job_counter, cpu_counter, dsk1_counter, dsk2_counter = 0;
 
-  /* flags for each of the system processes
-    if process is busy flag is set to 1 */
-  int cpu_busy, disk1_busy, disk2_busy = 0;
-
   // allocate space to keep track of priority q head data after popping an event
   int *event_time = (int *)malloc(sizeof(int));
   int *job_number = (int *)malloc(sizeof(int));
@@ -48,6 +44,15 @@ int main(int argc, char **argv) {
   Queue *disk2_q = create_queue();
   Qnode *n = NULL; // temp node to store return from de_queue()
   float f = 0;    // temporarily stores a float returned by rand_floater
+  float disk_prob = .45; // probability to break tie if disk1 and disk2 queue are the same length
+  int disk_q_diff = 0;  // holds the calculated difference in length off two fifo queues
+
+
+    /* flags for each of the system processes
+      if process is busy flag is set to 1 */
+  int cpu_busy =0;
+  int disk1_busy = 0;
+  int disk2_busy = 0;
 
   /* While the priority queue is not empty and the simulation_timer
     hasnt reached the FIN_TIME from config file*/
@@ -61,31 +66,37 @@ int main(int argc, char **argv) {
 
     printf("\n\n\nThese are the queues before popping and entering the switch block:" );
     print_queue(priority_q);
+    printf("CPU " );
     print_fifo(cpu_q);
+    printf("\ndisk1 " );
+    print_fifo(disk1_q);
+    printf("\ndisk2 " );
+    print_fifo(disk2_q);
 
     // pop the head node
     pop_event(&priority_q);
 
     switch(*event_type) {
+
       case JOB_ARRIVES :
+
         printf("\n\n*JOB_ARRIVES* Simulation_timer:%d", simulation_timer );
-        // job_arrives(&priority_q, arrive_params, &simulation_timer, *event_time, *job_number, *event_type);
         handle_event(&priority_q, arrive_params, &simulation_timer, *event_time, *job_number, JOB_ARRIVES);
 
         // if the cpu is NOT busy
         if (!cpu_busy) {
-          // send_to_cpu(&priority_q, cpu_params, &simulation_timer, *event_time, *job_number, *event_type);
           handle_event(&priority_q, cpu_params, &simulation_timer, *event_time, *job_number, FIN_CPU);
           en_queue(cpu_q, *event_time, *job_number);
           cpu_busy = 1;
-
         } else { // else CPU is busy
           printf("\n   CPU was busy" );
           en_queue(cpu_q, *event_time, *job_number);
-
         }
+
       break;
+
       case FIN_CPU :
+
         printf("\n\n  **FIN_CPU** Simulation_timer:%d", simulation_timer );
         cpu_busy = 0;        // CPU is not buys
         n = de_queue(cpu_q); // (simulation timer - n->event_time) will give time processing at CPU
@@ -93,9 +104,6 @@ int main(int argc, char **argv) {
         // While the cpu fifo is not empty
         if (cpu_q->front != NULL) {
           get_fifo_head(&cpu_q, &n);
-          // printf("\n  CPU is now busy -> event_time:%d job_num:%d event_type:%d ", n->event_time, n->job_number, JOB_ARRIVES );
-          // send_to_cpu(&priority_q, cpu_params, &simulation_timer, n->event_time, n->job_number, JOB_ARRIVES);
-          printf("\n  CPU is now PROCESSING -> event_time:%d job_num:%d event_type:%d ", n->event_time, n->job_number, FIN_CPU );
           handle_event(&priority_q, cpu_params, &simulation_timer, n->event_time, n->job_number, FIN_CPU);
           cpu_busy = 1;
         }
@@ -106,37 +114,109 @@ int main(int argc, char **argv) {
           break;
         }
 
-        // if is empty and the cpu is NOT busy
-        // if () {
-        //
-        //   send_to_cpu(&priority_q, disk1_params, &simulation_timer, *event_time, *job_number, *event_type);
-        //   en_queue(disk1_q, *event_time, *job_number);
-        //   disk1_busy = 1;
-        //
-        // } else { // else CPU is busy
-        //   printf("\n   CPU was busy" );
-        //   en_queue(cpu_q, *event_time, *job_number);
-        //
-        // }
+        // calculate the difference in disk1 and disk2 queue length
+        disk_q_diff = disk2_q->length - disk1_q->length;
 
+        // if disk2 queue is longer
+        if (disk_q_diff > 0) {
+
+          if (!disk1_busy) {
+            handle_event(&priority_q, disk1_params, &simulation_timer, *event_time, *job_number, FIN_DISK1);
+            en_queue(disk1_q, *event_time, *job_number);
+            disk1_busy = 1;
+          } else {
+            en_queue(disk1_q, *event_time, *job_number);
+          }
+
+        } else if (disk_q_diff < 0) { // disk1 queue is longer
+
+          if (!disk2_busy) {
+            handle_event(&priority_q, disk2_params, &simulation_timer, *event_time, *job_number, FIN_DISK2);
+            en_queue(disk2_q, *event_time, *job_number);
+            disk2_busy = 1;
+          } else {
+            en_queue(disk2_q, *event_time, *job_number);
+          }
+
+        } else { // queues are the same size
+          if (rand_floater() < disk_prob ) {
+            if (!disk1_busy) {
+              handle_event(&priority_q, disk1_params, &simulation_timer, *event_time, *job_number, FIN_DISK1);
+              en_queue(disk1_q, *event_time, *job_number);
+              disk1_busy = 1;
+            } else {
+              en_queue(disk1_q, *event_time, *job_number);
+            }
+          } else {
+            if (!disk2_busy) {
+              handle_event(&priority_q, disk2_params, &simulation_timer, *event_time, *job_number, FIN_DISK2);
+              en_queue(disk2_q, *event_time, *job_number);
+              disk2_busy = 1;
+            } else {
+              en_queue(disk2_q, *event_time, *job_number);
+            }
+          }
+        }
       break;
+
       case FIN_DISK1 :
-      printf("\n\n    ***FIN_DISK1*** Simulation_timer:%d", simulation_timer );
-        printf("\n\n!!!This function does not handle event type4: not -> %d\n", *event_type );
 
+        printf("\n\n    ***FIN_DISK1*** Simulation_timer:%d", simulation_timer );
+        disk1_busy = 0;        // disk1 is not busy
+        n = de_queue(disk1_q); // (simulation timer - n->event_time) will give time processing at disk
+
+        // While the cpu fifo is not empty
+        if (disk1_q->front != NULL) {
+          get_fifo_head(&disk1_q, &n);
+          printf("\n  DISK1 is now PROCESSING -> event_time:%d job_num:%d event_type:%d ", n->event_time, n->job_number, FIN_DISK1);
+          handle_event(&priority_q, disk1_params, &simulation_timer, n->event_time, n->job_number, FIN_DISK1);
+          disk1_busy = 1;
+        }
+
+        // if the cpu is NOT busy send the job back to the cpu
+        if (!cpu_busy) {
+          handle_event(&priority_q, cpu_params, &simulation_timer, *event_time, *job_number, FIN_CPU);
+          en_queue(cpu_q, *event_time, *job_number);
+          cpu_busy = 1;
+        } else { // else CPU is busy sned the job to the cpu queueu
+          printf("\n   CPU was busy" );
+          en_queue(cpu_q, *event_time, *job_number);
+        }
       break;
+
       case FIN_DISK2 :
-      printf("\n\n      ****FIN_DISK2**** Simulation_timer:%d", simulation_timer );
-        printf("\n\n!!!This function does not handle event type5: not -> %d\n", *event_type );
 
+        printf("\n\n      ****FIN_DISK2**** Simulation_timer:%d", simulation_timer );
+        disk2_busy = 0;        // disk2 is not busy
+        n = de_queue(disk2_q); // (simulation timer - n->event_time) will give time processing at disk
+
+        // While the cpu fifo is not empty
+        if (disk2_q->front != NULL) {
+          get_fifo_head(&disk2_q, &n);
+          printf("\n  DISK2 is now PROCESSING -> event_time:%d job_num:%d event_type:%d ", n->event_time, n->job_number, FIN_DISK2);
+          handle_event(&priority_q, disk1_params, &simulation_timer, n->event_time, n->job_number, FIN_DISK2);
+          disk2_busy = 1;
+        }
+
+        // if the cpu is NOT busy send the job back to the cpu
+        if (!cpu_busy) {
+          handle_event(&priority_q, cpu_params, &simulation_timer, *event_time, *job_number, FIN_CPU);
+          en_queue(cpu_q, *event_time, *job_number);
+          cpu_busy = 1;
+        } else { // else CPU is busy sned the job back to the cpu queue
+          printf("\n   CPU was busy" );
+          en_queue(cpu_q, *event_time, *job_number);
+        }
       break;
+
       case SIM_END :
       printf("\n\n        *****SIM_END***** Simulation_timer:%d", simulation_timer );
       printf("\n\n*** Notice*** Event %d left the priority_q\n\nThe simulation has ended\n", *event_type );
+      break;
 
-      // default:
-      //   // check for errors here maybe
-      //     printf("\n\n!!!Default unknown event_type\n type -> %d\n", *event_type );
+      default:
+        // check for errors here maybe
+          printf("\n\n!!!!!!Default unknown event_type!!!!!!!\n type -> %d\n", *event_type );
     }
     // printf("\nLenth of of fifo after switch is :%d", cpu_q->length);
     // print_fifo(cpu_q);
@@ -144,7 +224,12 @@ int main(int argc, char **argv) {
   } // end while
   // printf("\n  Queue after While loop: \n");
   print_queue(priority_q);
+  printf("CPU " );
   print_fifo(cpu_q);
+  printf("\ndisk1 " );
+  print_fifo(disk1_q);
+  printf("\ndisk2 " );
+  print_fifo(disk2_q);
 
 
   free_event_queue(&priority_q);
