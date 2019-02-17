@@ -111,12 +111,10 @@ void handle_event(Event **pq, int *config, int *sim_timer,
 
     // report what happend
     if (event_type == JOB_ARRIVES) {
-      printf("\n  ->This event was added to the priority_q: \n");
-      printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
+      printf("\n  ->Priority Queue update: \n     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
         next_event_time, (job_number + 1), event_type);
     } else {
-      printf("\n  ->This event was added to the priority_q: \n");
-      printf("     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
+      printf("\n  ->Priority Queue update: \n     Event_time: %3d, Job_number#: %3d, Event_type: %2d \n",
         next_event_time, job_number, event_type);
     }
 }

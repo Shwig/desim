@@ -30,9 +30,9 @@ void en_queue(Queue *q, int event_time, int job_number) {
 
     // the new node to be inserted in the list
     Qnode *temp = new_node(event_time, job_number);
+    // printf("\n  ->New job en_queue \n");
+    // printf("     Event_time: %3d, Job_number#: %3d \n", temp->event_time, temp->job_number);
 
-    printf("\n  ->New job en_queue \n");
-    printf("     Event_time: %3d, Job_number#: %3d \n", temp->event_time, temp->job_number);
     // If queue is empty, then new node is both front and rear
     // because the list was empty length of the list is now 1
     if (q->rear == NULL) {
@@ -52,7 +52,7 @@ void en_queue(Queue *q, int event_time, int job_number) {
 Qnode* de_queue(Queue *q) {
     // If queue is empty, return NULL.
     if (q->front == NULL) {
-      printf("**********The Queue was empty************\n" );
+      printf("**********Attempted de_queue from empty Queue************\n" );
        return NULL;
      }
 
@@ -65,9 +65,8 @@ Qnode* de_queue(Queue *q) {
     if (q->front == NULL) {
        q->rear = NULL;
      }
-
-     printf("\n  ->Job De_queued \n");
-     printf("     Event_time: %3d, Job_number#: %3d \n", temp->event_time, temp->job_number);
+     // printf("\n  ->Job De_queued \n");
+     // printf("     Event_time: %3d, Job_number#: %3d \n", temp->event_time, temp->job_number);
      // printf(" ******Qnode before de_queue return is -> Event_time: %7d, Job_number#: %7d \n", temp->event_time, temp->job_number);
     return temp;
 }
@@ -85,5 +84,19 @@ void print_fifo(Queue *q) {
 /* copy the data elements of the head node */
 void get_fifo_head(Queue **head, Qnode **node) {
   *node = (*head)->front;
+}
 
+/*  empty the queue by popping all the nodes*/
+void free_fifo_queue(Queue **head) {
+  // If queue is empty, do nothing.
+  if ((*head)->front == NULL) {
+    printf("**********Fifo Queue is empty ************\n" );
+     return;
+   }
+
+  Qnode *temp = (*head)->front;
+  while ((*head)->front != NULL) {
+    (*head)->front = (*head)->front->next;
+    free(temp);
+  }
 }
